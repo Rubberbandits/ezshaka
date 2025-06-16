@@ -1,9 +1,15 @@
 {
   "name": "ezshaka",
   "version": "1.0.0",
-  "description": "",
+  "description": "A helper library for Shaka Packager",
+  "keywords": [
+    "shaka",
+    "packager",
+    "helper",
+    "library"
+  ],
   "license": "ISC",
-  "author": "",
+  "author": "Rubberbandits",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
