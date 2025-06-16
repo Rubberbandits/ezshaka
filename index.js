@@ -12,7 +12,7 @@ class ShakaInput {
     }
 
     toString() {
-        return `'${this.argument}' \\`;
+        return `'${this.argument}'`;
     }
 
     stream(streamName) {
@@ -115,31 +115,36 @@ class EzShaka {
     }
     
     start() {
-        if (this.packager) {
-            console.error('Packager is already running.');
-            return;
-        }
-        this.packager = spawn(packagerPath, this.args, {
-            stdio: 'inherit',
-            shell: true,
-            env: {
-                ...process.env,
-                PACKAGER_PATH: packagerPath,
-            },
-        });
-    
-        this.packager.on('error', (err) => {
-            console.error('Failed to start packager:', err);
-        });
-    
-        this.packager.on('exit', (code) => {
-            console.log(`Packager exited with code ${code}`);
-            this.packager = null;
-        });
-    
-        this.packager.on('close', (code) => {
-            console.log(`Packager closed with code ${code}`);
-            this.packager = null;
+        return new Promise((resolve, reject) => {
+            if (this.packager) {
+                console.error('Packager is already running.');
+                return reject(new Error('Packager is already running.'));
+            }
+            this.packager = spawn(packagerPath, this.args, {
+                stdio: 'inherit',
+                shell: true,
+                env: {
+                    ...process.env,
+                    PACKAGER_PATH: packagerPath,
+                },
+            });
+        
+            this.packager.on('error', (err) => {
+                console.error('Failed to start packager:', err);
+                reject(err);
+            });
+        
+            this.packager.on('exit', (code) => {
+                console.log(`Packager exited with code ${code}`);
+                this.packager = null;
+                resolve(code);
+            });
+        
+            this.packager.on('close', (code) => {
+                console.log(`Packager closed with code ${code}`);
+                this.packager = null;
+                resolve(code);
+            });
         });
     }
 }
