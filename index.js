@@ -113,6 +113,27 @@ class EzShaka {
         this.args.push(`--hls_master_playlist_output=${outputFile}`);
         return this;
     }
+
+    allowCodecSwitching() {
+        this.args.push('--allow_codec_switching');
+        return this;
+    }
+
+    mpdBaseUrl(url) {
+        if (!url) {
+            throw new Error('Base URL is required.');
+        }
+        this.args.push(`--base_urls=${url}`);
+        return this;
+    }
+
+    hlsBaseUrl(url) {
+        if (!url) {
+            throw new Error('Base URL is required.');
+        }
+        this.args.push(`--hls_base_url=${url}`);
+        return this;
+    }
     
     start() {
         return new Promise((resolve, reject) => {
